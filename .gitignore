@@ -24,3 +24,6 @@ instance/
 # OS-specific files
 .DS_Store
 Thumbs.db
+
+# Static
+/static/bootstrap/
