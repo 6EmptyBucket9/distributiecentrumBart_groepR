@@ -11,28 +11,16 @@ env/
 # Flask instance folder
 instance/
 
-# Flask app settings (e.g., database URIs, secret keys)
-config.py
-
-# PyCharm, VSCode and other IDE/editor specific files
-.idea/
-.vscode/
-
-# Operating system files
-.DS_Store
-Thumbs.db
+# Logs
+*.log
 
 # Environment variables
 .env
 
-# Logs
-*.log
+# IDE configuration files
+.idea/
+.vscode/
 
-# Database files (if using SQLite for example)
-*.sqlite3
-
-# Distribution / packaging
-*.egg
-*.egg-info
-dist/
-build/
+# OS-specific files
+.DS_Store
+Thumbs.db
