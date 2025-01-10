@@ -1,37 +1,43 @@
-from flask import Blueprint, render_template
-from app.models import db, get_reflected_model, reflect_product_in_bestelling
+from flask import Blueprint, render_template, request
+from app.models import db  # Import db from app
+from app.models import get_reflected_model, reflect_product_in_bestelling
+from app.models import Bestelling
 
+bestelling = Bestelling
 main = Blueprint('main', __name__)
 
-@main.route('/bestelling/<int:bestelling_id>')
-def show_products(bestelling_id):
+# Order summary page
+@main.route('/bestellingen', methods=['GET', 'POST'])
+def show_filtered_orders():
+    Bestelling = get_reflected_model('bestelling')  # Dynamically get the reflected model
 
-    from app import create_app  # Lazy import to avoid circular import
+    bestelling_status = request.form.get('status')
 
-    app = create_app()
+    if bestelling_status:
+        bestellingen = db.session.query(Bestelling).filter_by(status=bestelling_status).all()
+    else:
+        bestellingen = db.session.query(Bestelling).all()
 
-    # Get reflected models dynamically
-    Bestelling = get_reflected_model('bestelling')  
-    Product = get_reflected_model('product')  
-    # Reflect model manually cause its not found by base mapper
-    Product_in_bestelling = reflect_product_in_bestelling(app.config['SQLALCHEMY_DATABASE_URI'])  # Reflect the 'product_in_bestelling' table
+    return render_template('bestellingen.html', bestellingen=bestellingen, selected_status=bestelling_status)
 
-    # Query Bestelling table
-    bestelling = db.session.query(Bestelling).filter_by(bestellingsnr=bestelling_id).first()
+# Example route for showing products in a specific order (bestelling)
+@main.route('/bestelling/<int:bestelling_id>', methods=['GET'])
+def show_products_in_order(bestelling_id):
+    # Query the Bestelling by ID, and eager load the associated products
+    bestelling = Bestelling.query.filter_by(bestellingsnr=bestelling_id).first()
 
-    if bestelling:
-        result = db.session.execute(
-            Product_in_bestelling.select().where(Product_in_bestelling.c.bestelling_bestellingsnr == bestelling_id)
-        )
-        
-        products = []
-        for record in result:
-        
-            product = db.session.query(Product).filter_by(productnr=record.product_productnr).first()
-            if product:
-                products.append(product)
-      
+    if not bestelling:
+        return "Bestelling not found.", 404
 
-        return render_template('bestelling_detail.html', bestelling=bestelling, products=products)
+    # Access the 'products' attribute to get the associated products in this bestelling
+    products = []
+    for product_in_bestelling in bestelling.products:
+        product = product_in_bestelling.product  # This links to the Product table
+        product_data = {
+            'product': product,
+            'prijs': product_in_bestelling.prijs,
+            'aantal': product_in_bestelling.aantal,
+        }
+        products.append(product_data)
 
-    return "Bestelling not found."
+    return render_template('bestelling_detail.html', bestelling=bestelling, products=products)
