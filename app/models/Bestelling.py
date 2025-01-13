@@ -28,4 +28,4 @@ class Bestelling(db.Model):
     levermoment_rel = db.relationship('Levermoment', backref='bestellingen')
     dagdeel_rel = db.relationship('Dagdeel', backref='bestellingen')
     koerier_rel = db.relationship('Koerier', backref='bestellingen')
-    products = db.relationship('ProductInBestelling', backref='bestelling')
+    products_in_bestelling = db.relationship('ProductInBestelling', backref='bestelling')

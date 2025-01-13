@@ -9,16 +9,22 @@
 <body>
     <h1 class="text-center my-5">Geplaatste Bestellingen</h1>
 
-    <!-- Filter Form -->
-    <form method="POST" action="{{ url_for('main.show_filtered_orders') }}" class="mb-4">
-        <label for="status" class="form-label">Filter by Status:</label>
+    <!-- Status filter Form -->
+    <form method="POST" action="{{ url_for('main.show_orders') }}" class="mb-4">
+        <label for="status" class="form-label">Zoek op status:</label>
         <select name="status" id="status" class="form-select">
             <option value="">All</option>
             <option value="1" {% if selected_status == '1' %}selected{% endif %}>Afgerond</option>
             <option value="2" {% if selected_status == '2' %}selected{% endif %}>Verzonden</option>
             <option value="3" {% if selected_status == '3' %}selected{% endif %}>Niet gepicked</option>
         </select>
-        <button type="submit" class="btn btn-primary mt-3">Filter</button>
+        <button type="submit" class="btn btn-primary mt-3">Zoek op status</button>
+    </form>
+    <!-- Search by bestellingsnr form -->
+    <form method="POST" action="{{ url_for('main.show_orders') }}" class="mb-4">
+        <label for="status" class="form-label">Zoek op bestellingsnr:</label>
+        <input type="text" name="bestellingsnr" id="bestellingsnr">
+        <button type="submit" class="btn btn-primary mt-3">Zoek op bestellingnummer</button>
     </form>
 
     <!-- Bestellingen Table -->
@@ -42,15 +48,15 @@
                 
                 <tr>
                     <td>{{ bestelling.bestellingsnr }}</td>
-                    <td>{{ bestelling.bestelling_medewerker }}</td>
+                    <td>{{ bestelling.medewerker_rel.voornaam }} {% if bestelling.medewerker_rel.tussenvoegsel %}{{bestelling.medewerker_rel.tussenvoegsel}} {% endif %} {{bestelling.medewerker_rel.achternaam }}</td>
                     <td>{{ bestelling.datum }}</td>
-                    <td>{{ bestelling.status }}</td>
-                    <td>{{ bestelling.bestelling_levermoment }}</td>
-                    <td>{{ bestelling.bestelling_dagdeel }}</td>
-                    <td>{{ bestelling.bestelling_koerier }}</td>
+                    <td>{{ bestelling.status_rel.status }}</td>
+                    <td>{{ bestelling.levermoment_rel.moment }}</td>
+                    <td>{{ bestelling.dagdeel_rel.dagdeel }}</td>
+                    <td>{{ bestelling.koerier_rel.naam }}</td>
                     <td>{{ bestelling.km_transport }}</td>
                     <td>{{ bestelling.spoed }}</td>
-                    <td><a href="{{ url_for('main.show_products_in_order', bestelling_id=bestelling.bestellingsnr) }}">Bekijken producten</a></td>
+                    <td><a href="{{ url_for('main.show_order_detail', bestelling_id=bestelling.bestellingsnr) }}">Bekijk details</a></td>
                 </tr>
                 {% endfor %}
             </tbody>

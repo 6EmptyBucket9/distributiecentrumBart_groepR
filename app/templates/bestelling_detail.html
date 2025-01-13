@@ -8,57 +8,77 @@
 </head>
 <body>
     <h1 class="text-center my-5">Bestelling Details</h1>
-    
-    <!-- Bestelling Table -->
+
     {% if bestelling %}
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>Bestellingsnr</th>
-                    <th>Datum</th>
-                    <th>Status</th>
-                    <th>Spoed</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>{{ bestelling.bestellingsnr }}</td>
-                    <td>{{ bestelling.datum }}</td>
-                    <td>{{ bestelling.status }}</td>
-                    <td>{{ bestelling.spoed }}</td>
-                </tr>
-            </tbody>
-        </table>
+        <form method="POST" action="{{ url_for('main.show_order_detail', bestelling_id=bestelling.bestellingsnr) }}">
+            <input type="hidden" name="_method" value="PUT">
+
+            <!-- Bestelling Table -->
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Bestellingsnr</th>
+                        <th>Datum</th>
+                        <th>Status</th>
+                        <th>Spoed</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{ bestelling.bestellingsnr }}</td>
+                        <td>{{ bestelling.datum }}</td>
+                        <td>
+                            <select name="bestelling_status" id="bestelling_status" class="form-select">
+                                <option value="1" {% if bestelling.status_rel.status == 'Afgerond' %}selected{% endif %}>Afgerond</option>
+                                <option value="2" {% if bestelling.status_rel.status == 'Verzonden' %}selected{% endif %}>Verzonden</option>
+                                <option value="3" {% if bestelling.status_rel.status == 'Niet gepicked' %}selected{% endif %}>Niet gepicked</option>
+                            </select>
+                        </td>
+                        <td>{{ bestelling.spoed }}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- Products Section -->
+            <h2 class="my-4">Products in Bestelling</h2>
+            <div class="row">
+                {% for product_data in products %}
+                    <div class="col-md-4 mb-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ product_data.productnr }} - {{ product_data.naam }}</h5>
+                                <p class="card-text">Voorraad: {{ product_data.voorraad }}</p>
+                                <p class="card-text">Bederfelijkheidsfactor: {{ product_data.bederfelijkheidsfactor }}</p>
+                                <p class="card-text">Batchnummer: {{ product_data.batchnummer }}</p>
+                                <p class="card-text">Verpakkingsgrote: {{ product_data.verpakkingsgrote }}</p>
+                                <p class="card-text">Locatie: {{ product_data.locatie if product_data.locatie else 'N/A' }}</p>
+                                <p class="card-text">Bewaaradvies: {{ product_data.bewaaradvies_naam if product_data.bewaaradvies_naam else 'N/A' }}</p>
+                                <p class="card-text">Fabrikant: {{ product_data.fabrikant_naam if product_data.fabrikant_naam else 'N/A' }}</p>
+                                
+                                <!-- Form Fields for Updating -->
+                                <div class="mb-3">
+                                    <label for="verschil_in_voorraad_{{ loop.index }}" class="form-label">Verschil in Voorraad</label>
+                                    <input type="text" class="form-control" id="verschil_in_voorraad_{{ loop.index }}" name="products[{{ loop.index0 }}][verschil_in_voorraad]" value="{{ product_data.verschil_in_voorraad }}">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="aantal_{{ loop.index }}" class="form-label">Aantal</label>
+                                    <input type="number" class="form-control" id="aantal_{{ loop.index }}" name="products[{{ loop.index0 }}][aantal]" value="{{ product_data.aantal }}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <p>Bestelling heeft geen producten.</p>
+                {% endfor %}
+            </div>
+
+            <div class="text-center my-4">
+                <button type="submit" class="btn btn-primary">Wijzig</button>
+            </div>
+        </form>
     {% else %}
         <p>Geen bestellingen gevonden.</p>
     {% endif %}
-    
-    <!-- Products Section -->
-    <h2 class="my-4">Products in Bestelling</h2>
-    <div class="row">
-        {% for product_data in products %}
-        <div class="col-md-4 mb-3">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">{{ product_data.product.productnr }}</h5>
-                    <p class="card-text">Naam: {{ product_data.product.naam }}</p>
-                    <p class="card-text">Voorraad: {{ product_data.product.voorraad }}</p>
-                    <p class="card-text">Bederfelijkheidsfactor: {{ product_data.product.bederfelijkheidsfactor }}</p>
-                    <p class="card-text">Batchnummer: {{ product_data.product.batchnummer }}</p>
-                    <p class="card-text">Verpakkingsgrote: {{ product_data.product.verpakkingsgrote }}</p>
-                    <p class="card-text">Locatie ID: {{ product_data.product.locatie_id }}</p>
-                    <p class="card-text">Verschil in Voorraad: {{ product_data.product.verschil_in_voorraad }}</p>
-                    <p class="card-text">Bewaaradvies: {{ product_data.product.bewaaradvies }}</p>
-                    <p class="card-text">Fabrikant ID: {{ product_data.product.product_fabrikant }}</p>
-                    <p class="card-text">Prijs: {{ product_data.prijs }}</p>
-                    <p class="card-text">Aantal: {{ product_data.aantal }}</p>
-                </div>
-            </div>
-        </div>
-        {% else %}
-        <p>Bestelling heeft geen product</p>
-        {% endfor %}
-    </div>
 
     <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
 </body>
