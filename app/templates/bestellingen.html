@@ -14,12 +14,13 @@
         <label for="status" class="form-label">Zoek op status:</label>
         <select name="status" id="status" class="form-select">
             <option value="">All</option>
-            <option value="1" {% if selected_status == '1' %}selected{% endif %}>Afgerond</option>
-            <option value="2" {% if selected_status == '2' %}selected{% endif %}>Verzonden</option>
-            <option value="3" {% if selected_status == '3' %}selected{% endif %}>Niet gepicked</option>
+            {% for status in statuses %}
+                <option value="{{ status.idBestelling_status }}" {% if selected_status == status.idBestelling_status|string %}selected{% endif %}>{{ status.status }}</option>
+            {% endfor %}
         </select>
         <button type="submit" class="btn btn-primary mt-3">Zoek op status</button>
     </form>
+    
     <!-- Search by bestellingsnr form -->
     <form method="POST" action="{{ url_for('main.show_orders') }}" class="mb-4">
         <label for="status" class="form-label">Zoek op bestellingsnr:</label>
@@ -45,10 +46,9 @@
             </thead>
             <tbody>
                 {% for bestelling in bestellingen %}
-                
                 <tr>
                     <td>{{ bestelling.bestellingsnr }}</td>
-                    <td>{{ bestelling.medewerker_rel.voornaam }} {% if bestelling.medewerker_rel.tussenvoegsel %}{{bestelling.medewerker_rel.tussenvoegsel}} {% endif %} {{bestelling.medewerker_rel.achternaam }}</td>
+                    <td>{{ bestelling.medewerker_rel.voornaam }} {% if bestelling.medewerker_rel.tussenvoegsel %}{{ bestelling.medewerker_rel.tussenvoegsel }} {% endif %}{{ bestelling.medewerker_rel.achternaam }}</td>
                     <td>{{ bestelling.datum }}</td>
                     <td>{{ bestelling.status_rel.status }}</td>
                     <td>{{ bestelling.levermoment_rel.moment }}</td>

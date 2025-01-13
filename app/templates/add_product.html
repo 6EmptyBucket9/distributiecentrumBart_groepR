@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Toevoegen</title>
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+</head>
+
+<body>
+    <h1 class="text-center my-5">Voeg een nieuw product toe</h1>
+
+    <form method="POST" action="{{ url_for('main.add_product') }}">
+        <div class="mb-3">
+            <label for="naam" class="form-label">Naam</label>
+            <input type="text" class="form-control" id="naam" name="naam" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="bederfelijkheidsfactor" class="form-label">Bederfelijkheidsfactor</label>
+            <input type="number" class="form-control" id="bederfelijkheidsfactor" name="bederfelijkheidsfactor" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="batchnummer" class="form-label">Batchnummer</label>
+            <input type="number" class="form-control" id="batchnummer" name="batchnummer" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="verpakkingsgrote" class="form-label">Verpakkingsgrote</label>
+            <input type="number" class="form-control" id="verpakkingsgrote" name="verpakkingsgrote" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="voorraad" class="form-label">Voorraad</label>
+            <input type="number" class="form-control" id="voorraad" name="voorraad" required>
+        </div>
+        <!-- Select for Locatie -->
+        <div class="mb-3">
+            <label for="locatie" class="form-label">Locatie</label>
+            <select name="locatie" id="locatie" class="form-select" required>
+                {% for locatie in locaties %}
+                    <option value="{{ locatie.idLocatie }}">{{ locatie.locatie_naam }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Select for Fabrikant -->
+        <div class="mb-3">
+            <label for="fabrikant" class="form-label">Fabrikant</label>
+            <select name="fabrikant" id="fabrikant" class="form-select" required>
+                {% for fabrikant in fabrikanten %}
+                    <option value="{{ fabrikant.idFabrikant }}">{{ fabrikant.naam }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Select for Bewaaradvies -->
+        <div class="mb-3">
+            <label for="bewaaradvies" class="form-label">Bewaaradvies</label>
+            <select name="bewaaradvies" id="bewaaradvies" class="form-select" required>
+                {% for advies in bewaaradviezen %}
+                    <option value="{{ advies.idBewaar_advies }}">{{ advies.advies }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="text-center my-4">
+            <button type="submit" class="btn btn-primary">Voeg Product Toe</button>
+        </div>
+    </form>
+
+    <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+</body>
+
+</html>

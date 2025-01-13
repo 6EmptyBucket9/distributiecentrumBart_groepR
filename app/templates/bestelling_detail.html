@@ -42,27 +42,27 @@
             <!-- Products Section -->
             <h2 class="my-4">Products in Bestelling</h2>
             <div class="row">
-                {% for product_data in products %}
+                {% for product_in_bestelling in bestelling.products_in_bestelling %}
                     <div class="col-md-4 mb-3">
                         <div class="card">
                             <div class="card-body">
-                                <h5 class="card-title">{{ product_data.productnr }} - {{ product_data.naam }}</h5>
-                                <p class="card-text">Voorraad: {{ product_data.voorraad }}</p>
-                                <p class="card-text">Bederfelijkheidsfactor: {{ product_data.bederfelijkheidsfactor }}</p>
-                                <p class="card-text">Batchnummer: {{ product_data.batchnummer }}</p>
-                                <p class="card-text">Verpakkingsgrote: {{ product_data.verpakkingsgrote }}</p>
-                                <p class="card-text">Locatie: {{ product_data.locatie if product_data.locatie else 'N/A' }}</p>
-                                <p class="card-text">Bewaaradvies: {{ product_data.bewaaradvies_naam if product_data.bewaaradvies_naam else 'N/A' }}</p>
-                                <p class="card-text">Fabrikant: {{ product_data.fabrikant_naam if product_data.fabrikant_naam else 'N/A' }}</p>
+                                <h5 class="card-title">{{ product_in_bestelling.product_rel.productnr }} - {{ product_in_bestelling.product_rel.naam }}</h5>
+                                <p class="card-text">Voorraad: {{ product_in_bestelling.product_rel.voorraad }}</p>
+                                <p class="card-text">Bederfelijkheidsfactor: {{ product_in_bestelling.product_rel.bederfelijkheidsfactor }}</p>
+                                <p class="card-text">Batchnummer: {{ product_in_bestelling.product_rel.batchnummer }}</p>
+                                <p class="card-text">Verpakkingsgrote: {{ product_in_bestelling.product_rel.verpakkingsgrote }}</p>
+                                <p class="card-text">Locatie: {{ product_in_bestelling.product_rel.locatie_rel.locatie_naam if product_in_bestelling.product_rel.locatie_rel else 'N/A' }}</p>
+                                <p class="card-text">Bewaaradvies: {{ product_in_bestelling.product_rel.bewaaradvies_rel.advies if product_in_bestelling.product_rel.bewaaradvies_rel else 'N/A' }}</p>
+                                <p class="card-text">Fabrikant: {{ product_in_bestelling.product_rel.fabrikant_rel.naam if product_in_bestelling.product_rel.fabrikant_rel else 'N/A' }}</p>
                                 
                                 <!-- Form Fields for Updating -->
                                 <div class="mb-3">
                                     <label for="verschil_in_voorraad_{{ loop.index }}" class="form-label">Verschil in Voorraad</label>
-                                    <input type="text" class="form-control" id="verschil_in_voorraad_{{ loop.index }}" name="products[{{ loop.index0 }}][verschil_in_voorraad]" value="{{ product_data.verschil_in_voorraad }}">
+                                    <input type="text" class="form-control" id="verschil_in_voorraad_{{ loop.index }}" name="products[{{ loop.index0 }}][verschil_in_voorraad]" value="{{ product_in_bestelling.verschil_in_voorraad }}">
                                 </div>
                                 <div class="mb-3">
                                     <label for="aantal_{{ loop.index }}" class="form-label">Aantal</label>
-                                    <input type="number" class="form-control" id="aantal_{{ loop.index }}" name="products[{{ loop.index0 }}][aantal]" value="{{ product_data.aantal }}">
+                                    <input type="number" class="form-control" id="aantal_{{ loop.index }}" name="products[{{ loop.index0 }}][aantal]" value="{{ product_in_bestelling.aantal }}">
                                 </div>
                             </div>
                         </div>
