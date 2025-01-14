@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Integer, Date, ForeignKey, SmallInteger
+from sqlalchemy import func
 from app.models import db
 
 # Import the related models for the relationships
@@ -29,3 +30,11 @@ class Bestelling(db.Model):
     dagdeel_rel = db.relationship('Dagdeel', backref='bestellingen')
     koerier_rel = db.relationship('Koerier', backref='bestellingen')
     products = db.relationship('ProductInBestelling', backref='bestelling')
+
+    # Computed property for totaalbedrag
+    @property
+    def totaalbedrag(self):
+        total = db.session.query(func.sum(ProductInBestelling.prijs * ProductInBestelling.aantal)) \
+            .filter(ProductInBestelling.bestelling_id == self.bestellingsnr) \
+            .scalar()
+        return total or 0  # return 0 if the result is None

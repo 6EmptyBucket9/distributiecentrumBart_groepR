@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head><title>Betalingsstatus</title></head>
+<body>
+    <h1>Betalingsstatus</h1>
+    <table>
+        <tr><th>Bestelling ID</th><th>Status</th><th>Totaalbedrag</th></tr>
+        {% for bestelling in bestellingen %}
+        <tr>
+            <td>{{ bestelling.bestellingsnr }}</td>
+            <td>{{ bestelling.status }}</td>
+            <td>{{ bestelling.totaalbedrag }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

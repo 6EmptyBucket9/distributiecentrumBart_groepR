@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html>
+<head><title>Financieel Rapport</title></head>
+<body>
+    <h1>Financieel Rapport</h1>
+    <p>Totale omzet: €{{ omzet }}</p>
+    <p>Totaal aantal bestellingen: {{ totaal_bestellingen }}</p>
+    <a href="{{ url_for('main.dashboard') }}" class="btn btn-secondary">Terug naar Dashboard</a>
+</body>
+</html>

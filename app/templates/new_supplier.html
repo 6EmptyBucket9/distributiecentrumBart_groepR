@@ -1,0 +1,27 @@
+<!-- new_supplier.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nieuwe Leverancier Toevoegen</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Nieuwe Leverancier Toevoegen</h1>
+    <form method="POST">
+        <label for="naam">Naam van Leverancier</label>
+        <input type="text" name="naam" id="naam" required>
+
+        <label for="emailadres">Emailadres</label>
+        <input type="email" name="emailadres" id="emailadres" required>
+
+        <label for="telefoonnr">Telefoonnummer</label>
+        <input type="text" name="telefoonnr" id="telefoonnr" required>
+
+        <button type="submit">Leverancier Toevoegen</button>
+    </form>
+    <a href="{{ url_for('main.show_filtered_orders') }}">Terug naar Bestellingen</a>
+</body>
+</html>
+

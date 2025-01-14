@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beheerpaneel Distributiecentrum Bart</title>
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center my-5">Beheerpaneel Distributiecentrum Bart</h1>
+        <nav class="nav justify-content-center">
+            <a class="nav-link" href="{{ url_for('main.show_filtered_orders') }}">Bestellingen</a>
+            <a class="nav-link" href="{{ url_for('main.get_fabrikanten') }}">Fabrikanten</a>
+            <a class="nav-link" href="{{ url_for('main.get_klanten') }}">Klanten</a>
+            <a class="nav-link" href="{{ url_for('main.get_betalingsstatus') }}">Betalingsstatus</a>
+            <a class="nav-link" href="{{ url_for('main.genereer_rapport') }}">Financieel Rapport</a>
+            <a class="nav-link" href="{{ url_for('main.bestelling_details', bestelling_id=1) }}">Bestelling Details</a>
+            <a class="nav-link" href="{{ url_for('main.new_bestelling') }}">Nieuwe Bestelling Toevoegen</a>
+            <a class="nav-link" href="{{ url_for('main.new_product') }}">Nieuw Product Toevoegen</a>
+            <a class="nav-link" href="{{ url_for('main.new_supplier') }}">Nieuwe Leverancier Toevoegen</a>
+        </nav>
+    </div>
+    
+    <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+</body>
+</html>

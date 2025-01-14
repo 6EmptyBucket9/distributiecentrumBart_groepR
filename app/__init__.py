@@ -1,6 +1,6 @@
 # app/__init__.py
 from flask import Flask
-from app.models import init_db
+from app.models import db
 from app.config import Config
 
 def create_app():
@@ -9,10 +9,10 @@ def create_app():
     
     
     # Initialize the database
-    init_db(app)
+    db.init_app(app)
     
     # Register blueprints
     from app.routes.views import main
-    app.register_blueprint(main)
+    app.register_blueprint(main, url_prefix='/')
 
     return app

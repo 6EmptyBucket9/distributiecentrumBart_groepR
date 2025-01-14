@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fabrikanten</title>
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center my-5">Overzicht van Fabrikanten</h1>
+
+        <!-- Links -->
+        <a href="{{ url_for('main.voeg_fabrikant_toe') }}" class="btn btn-primary mb-3">Nieuwe Fabrikant Toevoegen</a>
+        <a href="{{ url_for('main.dashboard') }}" class="btn btn-secondary mb-3">Terug naar Dashboard</a>
+
+        <!-- Fabrikanten Table -->
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Naam</th>
+                    <th>Emailadres</th>
+                    <th>Telefoonnummer</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for fabrikant in fabrikanten %}
+                <tr>
+                    <td>{{ fabrikant.naam }}</td>
+                    <td>{{ fabrikant.emailadres }}</td>
+                    <td>{{ fabrikant.telefoonnr }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="3" class="text-center">Geen fabrikanten gevonden.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nieuwe Bestelling Toevoegen</title>
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center my-5">Nieuwe Bestelling Toevoegen</h1>
+
+        <form method="POST" action="{{ url_for('main.bestelling_toevoegen') }}">
+            <div class="form-group">
+                <label for="bestellingsnr">Bestellingsnummer</label>
+                <input type="text" class="form-control" id="bestellingsnr" name="bestellingsnr" required>
+            </div>
+
+            <div class="form-group">
+                <label for="datum">Datum</label>
+                <input type="date" class="form-control" id="datum" name="datum" required>
+            </div>
+
+            <div class="form-group">
+                <label for="status">Status</label>
+                <input type="text" class="form-control" id="status" name="status" required>
+            </div>
+
+            <div class="form-group">
+                <label for="spoed">Spoed</label>
+                <select class="form-control" id="spoed" name="spoed">
+                    <option value="true">Ja</option>
+                    <option value="false">Nee</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Bestelling Toevoegen</button>
+        </form>
+
+        <a href="{{ url_for('main.bestellingen') }}" class="btn btn-secondary mt-3">Terug naar Bestellingen</a>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+</body>
+</html>
