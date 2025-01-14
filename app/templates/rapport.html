@@ -2,9 +2,33 @@
 <html>
 <head><title>Financieel Rapport</title></head>
 <body>
-    <h1>Financieel Rapport</h1>
-    <p>Totale omzet: €{{ omzet }}</p>
-    <p>Totaal aantal bestellingen: {{ totaal_bestellingen }}</p>
+    <h1>Financieel Rapport voor {{ klant.voornaam }} {{ klant.tussenvoegsel }} {{ klant.achternaam }}</h1>
+
+    <p><strong>Totale omzet:</strong> €{{ omzet }}</p>
+    <p><strong>Totaal aantal bestellingen:</strong> {{ totaal_bestellingen }}</p>
+
+    <h2>Afgelopen Transacties</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Bestellingsnummer</th>
+                <th>Datum</th>
+                <th>Status</th>
+                <th>Bedrag</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for transaction in transactions %}
+            <tr>
+                <td>{{ transaction.bestellingsnr }}</td>
+                <td>{{ transaction.datum }}</td>
+                <td>{{ transaction.status_rel.status_naam }}</td> <!-- Assuming you have a status relation -->
+                <td>€{{ transaction.totaalbedrag }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
     <a href="{{ url_for('main.dashboard') }}" class="btn btn-secondary">Terug naar Dashboard</a>
 </body>
 </html>
