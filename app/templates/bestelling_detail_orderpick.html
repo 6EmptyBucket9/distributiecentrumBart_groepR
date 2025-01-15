@@ -26,12 +26,13 @@
                 <tbody>
                     <tr>
                         <td>{{ bestelling.bestellingsnr }}</td>
-                        <td>{{ bestelling.datum }}</td>
+                        <td>{{ bestelling.datum.strftime('%d-%m-%Y')  }}</td>
                         <td>
-                            <select name="bestelling_status" id="bestelling_status" class="form-select">
-                                <option value="1" {% if bestelling.status_rel.status == 'Afgerond' %}selected{% endif %}>Afgerond</option>
-                                <option value="2" {% if bestelling.status_rel.status == 'Verzonden' %}selected{% endif %}>Verzonden</option>
-                                <option value="3" {% if bestelling.status_rel.status == 'Niet gepicked' %}selected{% endif %}>Niet gepicked</option>
+                            <select name="status" id="status" class="form-select">
+                                <option value="">All</option>
+                                {% for status in statuses %}
+                                    <option value="{{ status.idBestelling_status }}" {% if bestelling.status == status.idBestelling_status %}selected{% endif %}>{{ status.status }}</option>
+                                {% endfor %}
                             </select>
                         </td>
                         <td>{{ bestelling.spoed }}</td>
@@ -54,7 +55,7 @@
                                 <p class="card-text">Locatie: {{ product_in_bestelling.product_rel.locatie_rel.locatie_naam if product_in_bestelling.product_rel.locatie_rel else 'N/A' }}</p>
                                 <p class="card-text">Bewaaradvies: {{ product_in_bestelling.product_rel.bewaaradvies_rel.advies if product_in_bestelling.product_rel.bewaaradvies_rel else 'N/A' }}</p>
                                 <p class="card-text">Fabrikant: {{ product_in_bestelling.product_rel.fabrikant_rel.naam if product_in_bestelling.product_rel.fabrikant_rel else 'N/A' }}</p>
-                                
+
                                 <!-- Form Fields for Updating -->
                                 <div class="mb-3">
                                     <label for="verschil_in_voorraad_{{ loop.index }}" class="form-label">Verschil in Voorraad</label>

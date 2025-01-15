@@ -49,7 +49,7 @@
                 <tr>
                     <td>{{ bestelling.bestellingsnr }}</td>
                     <td>{{ bestelling.medewerker_rel.voornaam }} {% if bestelling.medewerker_rel.tussenvoegsel %}{{ bestelling.medewerker_rel.tussenvoegsel }} {% endif %}{{ bestelling.medewerker_rel.achternaam }}</td>
-                    <td>{{ bestelling.datum }}</td>
+                    <td>{{ bestelling.datum.strftime('%d-%m-%Y')  }}</td>
                     <td>{{ bestelling.status_rel.status }}</td>
                     <td>{{ bestelling.levermoment_rel.moment }}</td>
                     <td>{{ bestelling.dagdeel_rel.dagdeel }}</td>

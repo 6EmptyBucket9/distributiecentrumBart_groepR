@@ -1,5 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, jsonify
-from sqlalchemy.orm import joinedload
+from flask import Blueprint, render_template, request, redirect, url_for, jsonify, flash
 # model imports
 from app.models import db 
 from app.models.Bestelling import Bestelling
@@ -8,11 +7,12 @@ from app.models.Product import Product
 from app.models.Fabrikant import Fabrikant
 from app.models.Locatie import Locatie
 from app.models.BewaarAdvies import BewaarAdvies
-
-
-
-
-
+from app.models.Medewerker import Medewerker
+from app.models.Levermoment import Levermoment
+from app.models.Dagdeel import Dagdeel
+from app.models.Koerier import Koerier
+from app.models.ProductInBestelling import ProductInBestelling
+from app.models.BestellingStatus import BestellingStatus
 main = Blueprint('main', __name__)
 
 # Bestelling summary page
@@ -31,75 +31,48 @@ def show_orders():
 
     bestellingen = query.all()
 
-    return render_template('bestellingen.html', bestellingen=bestellingen, statuses=statuses, selected_status=bestelling_status)
+    return render_template('bestellingen_summary.html', bestellingen=bestellingen, statuses=statuses, selected_status=bestelling_status)
 
 # Order detail page
 @main.route('/bestelling/<int:bestelling_id>', methods=['GET', 'POST'])
 def show_order_detail(bestelling_id):
     # Get bestelling by ID
     bestelling = db.session.query(Bestelling).filter_by(bestellingsnr=bestelling_id).first()
-
+    statuses = db.session.query(BestellingStatus).all()
+    
     if not bestelling:
         return jsonify({'error': 'Bestelling not found.'}), 404
 
     if request.method == 'POST':
         if request.form.get('_method') == 'PUT':
             # Update bestelling status
-            bestelling_status = request.form.get('bestelling_status')
+            bestelling_status = request.form.get('status')  # Changed to 'status'
             if bestelling_status:
                 bestelling.status = bestelling_status
 
-            # Update products in bestelling
+            # Update products in bestelling using enumeration
             for i, product_in_bestelling in enumerate(bestelling.products_in_bestelling):
                 verschil_in_voorraad_value = request.form.get(f'products[{i}][verschil_in_voorraad]')
                 aantal_value = request.form.get(f'products[{i}][aantal]')
 
-                # Update verschil_in_voorraad if valid
+                # Validate and update the product details
                 if verschil_in_voorraad_value and verschil_in_voorraad_value.isdigit():
                     product_in_bestelling.product_rel.verschil_in_voorraad = int(verschil_in_voorraad_value)
 
-                # Update aantal if valid
                 if aantal_value and aantal_value.isdigit():
                     product_in_bestelling.aantal = int(aantal_value)
 
-            # Commit the changes to the database
             db.session.commit()
 
-            # Redirect back to the detail page
-            return redirect(url_for('main.show_orders', bestelling_id=bestelling_id))
+            return redirect(url_for('main.show_orders'))
 
-    # Prepare products for rendering
-    products = [
-        {
-            'productnr': product.productnr,
-            'naam': product.naam,
-            'voorraad': product.voorraad,
-            'bederfelijkheidsfactor': product.bederfelijkheidsfactor,
-            'batchnummer': product.batchnummer,
-            'verpakkingsgrote': product.verpakkingsgrote,
-            'locatie_id': product.locatie_id,
-            'bewaaradvies': product.bewaaradvies,
-            'product_fabrikant': product.product_fabrikant,
-            'prijs': product_in_bestelling.prijs,
-            'aantal': product_in_bestelling.aantal,
-            'verschil_in_voorraad': product.verschil_in_voorraad,
-            'locatie': product.locatie_rel.locatie_naam if product.locatie_rel else None,
-            'bewaaradvies_naam': product.bewaaradvies_rel.advies if product.bewaaradvies_rel else None,
-            'fabrikant_naam': product.fabrikant_rel.naam if product.fabrikant_rel else None,
-        }
-        for product_in_bestelling in bestelling.products_in_bestelling
-        for product in [product_in_bestelling.product_rel]
-    ]
-
-    return render_template('bestelling_detail.html', bestelling=bestelling, products=products)
+    return render_template('bestelling_detail_orderpick.html', bestelling=bestelling, statuses=statuses)
 
 # Product summary page
-@main.route('/producten', methods=['GET', 'POST'])
+@main.route('/products', methods=['GET', 'POST'])
 def show_products():
-    # Fetch all products from the database along with their related data
+    # Fetch all models
     products = db.session.query(Product).all()
-
-    # Fetch all locatie, fabrikant, and bewaaradvies objects from the database
     locaties = db.session.query(Locatie).all()
     fabrikanten = db.session.query(Fabrikant).all()
     bewaaradviezen = db.session.query(BewaarAdvies).all()
@@ -146,7 +119,7 @@ def show_products():
 
             return redirect(url_for('main.show_products'))
 
-    return render_template('producten.html', products=products, locaties=locaties, fabrikanten=fabrikanten, bewaaradviezen=bewaaradviezen)
+    return render_template('product_summary.html', products=products, locaties=locaties, fabrikanten=fabrikanten, bewaaradviezen=bewaaradviezen)
 
 # Add product page
 @main.route('/add_product', methods=['GET', 'POST'])
@@ -180,8 +153,7 @@ def add_product():
         db.session.commit()
 
         # Redirect after adding the product
-        return redirect(url_for('main.show_products'))  # Update with the correct route to show products
-
+        return redirect(url_for('main.show_products')) 
     # If GET, render the form and pass the needed data
     locaties = Locatie.query.all()
     fabrikanten = Fabrikant.query.all()
@@ -189,6 +161,79 @@ def add_product():
 
     return render_template('add_product.html', locaties=locaties, fabrikanten=fabrikanten, bewaaradviezen=bewaaradviezen)
 
+# Add bestelling page
+@main.route('/add_bestelling', methods=['GET', 'POST'])
+def add_bestelling():
+    # Fetch all models
+    products = db.session.query(Product).all()
+    medewerkers = db.session.query(Medewerker).all()
+    koeriers = db.session.query(Koerier).all()
+    levermomenten = db.session.query(Levermoment).all()
+    dagdelen = db.session.query(Dagdeel).all()
+    statuses = db.session.query(BestellingStatus).all()
 
+    if request.method == 'POST':
+        # Read the form data
+        bestelling_medewerker = request.form.get('bestelling_medewerker')
+        datum = request.form.get('datum')
+        status = request.form.get('status')
+        bestelling_levermoment = request.form.get('bestelling_levermoment')
+        bestelling_dagdeel = request.form.get('bestelling_dagdeel')
+        bestelling_koerier = request.form.get('bestelling_koerier')
+        km_transport = request.form.get('km_transport')
+        spoed = request.form.get('spoed')
 
+        products_data = {}
+        for product in products:
+            # Fetch product quantities and prices from the form
+            product_aantal = request.form.get(f'product_aantal_{product.productnr}', 0)
+            product_prijs = request.form.get(f'product_prijs_{product.productnr}', 0)
 
+            # Only include products with valid quantities and prices
+            if int(product_aantal) > 0 and float(product_prijs) > 0:
+                products_data[product.productnr] = {
+                    'aantal': product_aantal,
+                    'prijs': product_prijs
+                }
+            elif int(product_aantal) > 0 and float(product_prijs) > 0:
+                print("fout")
+
+        # Create new Bestelling object
+        new_bestelling = Bestelling(
+            bestelling_medewerker=bestelling_medewerker,
+            datum=datum,
+            status=status,
+            bestelling_levermoment=bestelling_levermoment,
+            bestelling_dagdeel=bestelling_dagdeel,
+            bestelling_koerier=bestelling_koerier,
+            km_transport=km_transport,
+            spoed=spoed
+        )
+
+        try:
+            # Add Bestelling to the database
+            db.session.add(new_bestelling)
+            db.session.commit()
+
+            # Add ProductInBestelling entries
+            for productnr, data in products_data.items():
+                product_in_bestelling = ProductInBestelling(
+                    bestelling_bestellingsnr=new_bestelling.bestellingsnr,
+                    product_productnr=productnr,
+                    aantal=data['aantal'],
+                    prijs=data['prijs']
+                )
+            
+                db.session.add(product_in_bestelling)
+
+            db.session.commit()
+
+            return redirect(url_for('main.show_orders', bestelling_id=new_bestelling.bestellingsnr))
+
+        except Exception as e:
+            db.session.rollback()
+            flash(f"An error occurred while creating the bestelling: {str(e)}")
+            return render_template('add_bestelling.html', products=products, medewerkers=medewerkers, koeriers=koeriers, levermomenten=levermomenten, dagdelen=dagdelen)
+
+    # If GET request, render the form
+    return render_template('add_bestelling.html', products=products, medewerkers=medewerkers, koeriers=koeriers, levermomenten=levermomenten, dagdelen=dagdelen, statuses=statuses)
