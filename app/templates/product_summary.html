@@ -10,105 +10,31 @@
 
 <body>
     <h1 class="text-center my-5">Product Overzicht</h1>
-    <!-- check if there are products -->
+
+    <!-- Check if there are products -->
     {% if products %}
-    <form method="POST" action="{{ url_for('main.show_products') }}">
-        <input type="hidden" name="_method" value="PUT">
-        <div class="row">
-            {% for product in products %}
-            <div class="col-md-4 mb-3">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ product.naam }}</h5>
-
-                        <div class="mb-3">
-                            <label for="naam_{{ loop.index }}" class="form-label">Naam</label>
-                            <input type="text" class="form-control" id="naam_{{ loop.index }}"
-                                name="products[{{ loop.index0 }}][naam]" value="{{ product.naam }}">
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="voorraad_{{ loop.index }}" class="form-label">Voorraad</label>
-                            <input type="number" class="form-control" id="voorraad_{{ loop.index }}"
-                                name="products[{{ loop.index0 }}][voorraad]" value="{{ product.voorraad }}">
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="bederfelijkheidsfactor_{{ loop.index }}"
-                                class="form-label">Bederfelijkheidsfactor</label>
-                            <input type="number" class="form-control" id="bederfelijkheidsfactor_{{ loop.index }}"
-                                name="products[{{ loop.index0 }}][bederfelijkheidsfactor]"
-                                value="{{ product.bederfelijkheidsfactor }}">
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="batchnummer_{{ loop.index }}" class="form-label">Batchnummer</label>
-                            <input type="text" class="form-control" id="batchnummer_{{ loop.index }}"
-                                name="products[{{ loop.index0 }}][batchnummer]" value="{{ product.batchnummer }}">
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="verpakkingsgrote_{{ loop.index }}" class="form-label">Verpakkingsgrote</label>
-                            <input type="number" class="form-control" id="verpakkingsgrote_{{ loop.index }}"
-                                name="products[{{ loop.index0 }}][verpakkingsgrote]"
-                                value="{{ product.verpakkingsgrote }}">
-                        </div>
-                        <!-- Selects for predetermined values -->
-                        <div class="mb-3">
-                            <label for="locatie_{{ loop.index }}" class="form-label">Locatie</label>
-                            <select name="products[{{ loop.index0 }}][locatie]" id="locatie_{{ loop.index }}"
-                                class="form-select">
-                                {% for locatie in locaties %}
-                                <option value="{{ locatie.idLocatie }}" {% if product.locatie_id==locatie.idLocatie
-                                    %}selected{% endif %}>
-                                    {{ locatie.locatie_naam }}
-                                </option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="fabrikant_{{ loop.index }}" class="form-label">Fabrikant</label>
-                            <select name="products[{{ loop.index0 }}][fabrikant]" id="fabrikant_{{ loop.index }}"
-                                class="form-select">
-                                {% for fabrikant in fabrikanten %}
-                                <option value="{{ fabrikant.idFabrikant }}" {% if
-                                    product.fabrikant_id==fabrikant.idFabrikant %}selected{% endif %}>
-                                    {{ fabrikant.naam }}
-                                </option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="bewaaradvies_{{ loop.index }}" class="form-label">Bewaaradvies</label>
-                            <select name="products[{{ loop.index0 }}][bewaaradvies]" id="bewaaradvies_{{ loop.index }}"
-                                class="form-select">
-                                {% for advies in bewaaradviezen %}
-                                <option value="{{ advies.idBewaaradvies }}" {% if
-                                    product.bewaaradvies_id==advies.idBewaaradvies %}selected{% endif %}>
-                                    {{ advies.advies }}
-                                </option>
-                                {% endfor %}
-                            </select>
-                        </div>
-
-
-                    </div>
+    <div class="row">
+        {% for product in products %}
+        <div class="col-md-4 mb-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title mb-3">{{ product.naam }}</h5>
+                    <p><strong>Voorraad:</strong> {{ product.voorraad }}</p>
+                    <p><strong>Bederfelijkheidsfactor:</strong> {{ product.bederfelijkheidsfactor }}</p>
+                    <p><strong>Batchnummer:</strong> {{ product.batchnummer }}</p>
+                    <p><strong>Verpakkingsgrote:</strong> {{ product.verpakkingsgrote }}</p>
+                    <p><strong>Locatie:</strong> {{ product.locatie_rel.locatie_naam  }}</p>
+                    <p><strong>Fabrikant:</strong> {{ product.fabrikant_rel.naam  }}</p>
+                    <p><strong>Bewaaradvies:</strong> {{ product.bewaaradvies_rel.advies}}</p>
+                    <a href="{{ url_for('main.update_product', productnr=product.productnr) }}">Update product</a>
                 </div>
             </div>
-            {% endfor %}
         </div>
-
-        <div class="text-center my-4">
-            <button type="submit" class="btn btn-primary">Wijzig</button>
-        </div>
-    </form>
-
-    <a href="{{ url_for('main.add_product') }}" class="btn btn-primary">Voeg een product toe</a>
+        {% endfor %}
+    </div>
 
     {% else %}
     <p>Geen producten gevonden.</p>
-    <a href="{{ url_for('main.add_product') }}" class="btn btn-primary">Voeg een product toe</a>
-
     {% endif %}
 
     <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>

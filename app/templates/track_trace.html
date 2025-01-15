@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Track & Trace Bestelling</title>
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container my-5">
+        <h1 class="text-center mb-4">Track & Trace</h1>
+
+        <!-- Search by bestellingnr form -->
+        <form method="POST" action="{{ url_for('main.track_and_trace') }}" class="mb-4">
+            <div class="row">
+                <div class="col-md-6">
+                    <label for="bestellingsnr" class="form-label">Zoek op bestellingsnummer:</label>
+                    <input type="text" name="bestellingsnr" id="bestellingsnr" class="form-control"
+                        placeholder="Bestellingsnummer">
+                </div>
+            </div>
+            <div class="text-center mt-3">
+                <button type="submit" class="btn btn-primary">Zoek</button>
+            </div>
+        </form>
+
+        {% if bestelling %}
+        <h3>Track & Trace Code:</h3>
+        <p>{{ track_code }}</p>
+        <!-- Order Details -->
+        <form method="POST" action="{{ url_for('main.track_and_trace') }}">
+            <input type="hidden" name="_method" value="PUT">
+            <table class="table table-bordered mt-4">
+                <thead>
+                    <tr>
+                        <th>Bestellingsnr</th>
+                        <th>Datum</th>
+                        <th>Status</th>
+                        <th>Levermoment</th>
+                        <th>Dagdeel</th>
+                        <th>Spoed</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{ bestelling.bestellingsnr }}</td>
+                        <td>{{ bestelling.datum.strftime('%d-%m-%Y') }}</td>
+                        <td>
+                            <select name="status" id="status" class="form-select">
+                                {% for status in statuses %}
+                                <option value="{{ status.idBestelling_status }}" {% if
+                                    bestelling.status==status.idBestelling_status %}selected{% endif %}>
+                                    {{ status.status }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td>
+                            <div class="mb-3">
+                                <select id="bestelling_levermoment" name="bestelling_levermoment" class="form-select"
+                                    required>
+                                    {% for levermoment in levermomenten %}
+                                    <option value="{{ levermoment.idLevermoment }}" {% if bestelling.levermoment_rel and
+                                        bestelling.levermoment_rel.idLevermoment==levermoment.idLevermoment %}selected{%
+                                        endif %}>
+                                        {{ levermoment.moment }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="mb-3">
+                                <select id="bestelling_dagdeel" name="bestelling_dagdeel" class="form-select" required>
+                                    {% for dagdeel in dagdelen %}
+                                    <option value="{{ dagdeel.idDagdeel }}" {% if bestelling.dagdeel_rel and
+                                        bestelling.dagdeel_rel.idDagdeel==dagdeel.idDagdeel %}selected{% endif %}>
+                                        {{ dagdeel.dagdeel }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </td>
+
+                        <td>{{ bestelling.spoed }}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- Products Section -->
+            <h2 class="my-4">Producten in Bestelling</h2>
+            <div class="row">
+                {% for product_in_bestelling in bestelling.products_in_bestelling %}
+                <div class="col-md-4 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ product_in_bestelling.product_rel.productnr }} - {{
+                                product_in_bestelling.product_rel.naam }}</h5>
+                            <p class="card-text">Voorraad: {{ product_in_bestelling.product_rel.voorraad }}</p>
+                            <p class="card-text">Bederfelijkheidsfactor: {{
+                                product_in_bestelling.product_rel.bederfelijkheidsfactor }}</p>
+                            <p class="card-text">Batchnummer: {{ product_in_bestelling.product_rel.batchnummer }}</p>
+                            <p class="card-text">Verpakkingsgrote: {{ product_in_bestelling.product_rel.verpakkingsgrote
+                                }}</p>
+                            <p class="card-text">Locatie: {{ product_in_bestelling.product_rel.locatie_rel.locatie_naam
+                                if product_in_bestelling.product_rel.locatie_rel else 'N/A' }}</p>
+                            <p class="card-text">Bewaaradvies: {{
+                                product_in_bestelling.product_rel.bewaaradvies_rel.advies if
+                                product_in_bestelling.product_rel.bewaaradvies_rel else 'N/A' }}</p>
+                            <p class="card-text">Fabrikant: {{ product_in_bestelling.product_rel.fabrikant_rel.naam if
+                                product_in_bestelling.product_rel.fabrikant_rel else 'N/A' }}</p>
+                            <p class="card-text">Verschil in Voorraad: {{ product_in_bestelling.verschil_in_voorraad }}
+                            </p>
+                            <p class="card-text">Aantal: {{ product_in_bestelling.aantal }}</p>
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                <p>Deze bestelling heeft geen producten.</p>
+                {% endfor %}
+            </div>
+
+            <div class="text-center mt-4">
+                <button type="submit" class="btn btn-primary">Opslaan</button>
+            </div>
+        </form>
+        {% else %}
+        <p class="text-center mt-4">Zoek een bestelling op.</p>
+        {% endif %}
+    </div>
+
+    <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+</body>
+
+</html>
