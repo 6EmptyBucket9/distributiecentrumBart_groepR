@@ -1,20 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
 </head>
+
 <body>
+    <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
-            <a class="navbar-brand" href="dashboard.html">Dashboard</a>
+            <a class="navbar-brand" href="{{ url_for('main.show_dashboard') }}">Dashboard</a>
             <div class="collapse navbar-collapse">
                 <ul class="navbar-nav">
-                    <li class="nav-item"><a class="nav-link" href="bestellingen.html">Bestellingen</a></li>
-                    <li class="nav-item"><a class="nav-link" href="producten.html">Producten</a></li>
-                    <li class="nav-item"><a class="nav-link" href="klanten.html">Klanten</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('main.show_orders') }}">Bestellingen</a>
+                    </li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('main.show_products') }}">Producten</a>
+                    </li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('main.show_suppliers') }}">Fabrikanten</a>
+                    </li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('main.show_customers') }}">Klanten</a>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -22,37 +30,112 @@
 
     <div class="container mt-5">
         <h1>Welkom op het Dashboard</h1>
+        
+        <!-- Dashboard Metrics Section -->
         <div class="row">
-            <div class="col-md-4">
+            <!-- Tekorten (Out of stock) -->
+            <div class="col-md-6">
                 <div class="card">
-                    <div class="card-body text-center">
-                        <h5 class="card-title">Bestellingen</h5>
-                        <a href="bestellingen.html" class="btn btn-primary">Bekijk</a>
-                        <a href="bestelling_toevoegen.html" class="btn btn-success">Toevoegen</a>
+                    <div class="card-body">
+                        <h5 class="card-title">Tekorten (Out of Stock)</h5>
+                        {% if out_of_stock %}
+                            <ul>
+                                {% for product in out_of_stock %}
+                                    <li>{{ product.naam }} - {{ product.voorraad }} items left</li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <p>Geen producten zijn op dit moment niet op voorraad.</p>
+                        {% endif %}
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
+
+            <!-- Products soon to expire -->
+            <div class="col-md-6">
                 <div class="card">
-                    <div class="card-body text-center">
-                        <h5 class="card-title">Producten</h5>
-                        <a href="producten.html" class="btn btn-primary">Bekijk</a>
-                        <a href="add_product.html" class="btn btn-success">Toevoegen</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-body text-center">
-                        <h5 class="card-title">Klanten</h5>
-                        <a href="klanten.html" class="btn btn-primary">Bekijk</a>
-                        <a href="klant_toevoegen.html" class="btn btn-success">Toevoegen</a>
+                    <div class="card-body">
+                        <h5 class="card-title"> {{ soon_to_throw_away }} Producten die binnenkort moeten worden vernietigd</h5>
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- Transport Metrics Section -->
+        <div class="row mt-4">
+            <!-- Standard Transport CO2 -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Standaard Transport</h5>
+                        <p><strong>Totaal kilometers:</strong> {{ total_standard_km }} km</p>
+                        <p><strong>CO2 Emissies:</strong> {{ co2_standard }} kg CO2</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Emergency Courier CO2 -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Spoedkoerier</h5>
+                        <p><strong>Totaal kilometers:</strong> {{ total_emergency_km }} km</p>
+                        <p><strong>CO2 Emissies:</strong> {{ co2_emergency }} kg CO2</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Existing Card Sections -->
+        <div class="row mt-4">
+            <!-- Bestellingen Card -->
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Bestellingen</h5>
+                        <a href="{{ url_for('main.show_orders') }}" class="btn btn-primary">Bekijk</a>
+                        <a href="{{ url_for('main.add_order') }}" class="btn btn-success">Toevoegen</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Producten Card -->
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Producten</h5>
+                        <a href="{{ url_for('main.show_products') }}" class="btn btn-primary">Bekijk</a>
+                        <a href="{{ url_for('main.add_product') }}" class="btn btn-success">Toevoegen</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Klanten Card -->
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Klanten</h5>
+                        <a href="{{ url_for('main.show_customers') }}" class="btn btn-primary">Bekijk Klanten</a>
+                        <a href="{{ url_for('main.add_customer') }}" class="btn btn-success">Nieuwe Klant Toevoegen</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fabrikanten Card -->
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Fabrikanten</h5>
+                        <a href="{{ url_for('main.show_suppliers') }}" class="btn btn-primary">Bekijk</a>
+                        <a href="{{ url_for('main.add_supplier') }}" class="btn btn-success">Toevoegen</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

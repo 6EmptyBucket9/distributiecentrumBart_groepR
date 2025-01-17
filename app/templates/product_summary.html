@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Producten</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-light">
+
+    <div class="container py-5">
+        <h1 class="text-center mb-4">Product Overzicht</h1>
+
+        <!-- Check if there are products -->
+        {% if products %}
+        <div class="row">
+            {% for product in products %}
+            <div class="col-md-4 mb-3">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title mb-3">{{ product.naam }}</h5>
+                        <p><strong>Voorraad:</strong> {{ product.voorraad }}</p>
+                        <p><strong>Bederfelijkheidsfactor:</strong> {{ product.bederfelijkheidsfactor }}</p>
+                        <p><strong>Batchnummer:</strong> {{ product.batchnummer }}</p>
+                        <p><strong>Verpakkingsgrote:</strong> {{ product.verpakkingsgrote }}</p>
+                        <p><strong>Locatie:</strong> {{ product.locatie_rel.locatie_naam }}</p>
+                        <p><strong>Fabrikant:</strong> {{ product.fabrikant_rel.naam }}</p>
+                        <p><strong>Bewaaradvies:</strong> {{ product.bewaaradvies_rel.advies }}</p>
+                        <a href="{{ url_for('main.update_product', productnr=product.productnr) }}" class="btn btn-warning btn-sm">Update product</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        {% else %}
+        <p class="text-center">Geen producten gevonden.</p>
+        {% endif %}
+
+        {% if referrer %}
+        <div class="mb-3 text-center">
+            <a href="{{ referrer }}" class="btn btn-secondary">Terug</a>
+        </div>
+        {% endif %}
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

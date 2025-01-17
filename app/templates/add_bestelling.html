@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="nl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nieuwe Bestelling</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-light">
+
+    <div class="container py-5">
+        <h1 class="text-center mb-4">Nieuwe Bestelling</h1>
+
+        <form method="POST" action="{{ url_for('main.add_order') }}" class="shadow-sm p-4 rounded bg-white">
+            <h2 class="my-4">Bestelling Informatie</h2>
+
+            <!-- Medewerker Dropdown -->
+            <div class="mb-3">
+                <label for="bestelling_medewerker" class="form-label">Medewerker</label>
+                <select id="bestelling_medewerker" name="bestelling_medewerker" class="form-select" required>
+                    {% if related_models['medewerkers'] %}
+                        {% for medewerker in related_models['medewerkers'] %}
+                            <option value="{{ medewerker.Medewerkernr }}">
+                                {{ medewerker.voornaam }} {{ medewerker.tussenvoegsel or '' }} {{ medewerker.achternaam }}
+                            </option>
+                        {% endfor %}
+                    {% else %}
+                        <option disabled>Geen medewerkers beschikbaar</option>
+                    {% endif %}
+                </select>
+            </div>
+
+            <!-- Datum -->
+            <div class="mb-3">
+                <label for="datum" class="form-label">Datum</label>
+                <input type="date" class="form-control" id="datum" name="datum" required>
+            </div>
+
+            <!-- Status Dropdown -->
+            <div class="mb-3">
+                <label for="status" class="form-label">Bestelling Status</label>
+                <select name="status" id="status" class="form-select">
+                    <option value="">Alle</option>
+                    {% if related_models['statuses'] %}
+                        {% for status in related_models['statuses'] %}
+                            <option value="{{ status.idBestelling_status }}">{{ status.status }}</option>
+                        {% endfor %}
+                    {% else %}
+                        <option disabled>Geen statussen beschikbaar</option>
+                    {% endif %}
+                </select>
+            </div>
+
+            <!-- Levermoment Dropdown -->
+            <div class="mb-3">
+                <label for="bestelling_levermoment" class="form-label">Levermoment</label>
+                <select id="bestelling_levermoment" name="bestelling_levermoment" class="form-select" required>
+                    {% if related_models['levermomenten'] %}
+                        {% for levermoment in related_models['levermomenten'] %}
+                            <option value="{{ levermoment.idLevermoment }}">{{ levermoment.moment }}</option>
+                        {% endfor %}
+                    {% else %}
+                        <option disabled>Geen levermomenten beschikbaar</option>
+                    {% endif %}
+                </select>
+            </div>
+
+            <!-- Kilometers voor Transport -->
+            <div class="mb-3">
+                <label for="km_transport" class="form-label">Kilometers voor transport</label>
+                <input type="number" class="form-control" id="km_transport" name="km_transport" required>
+            </div>
+
+            <!-- Spoed Dropdown -->
+            <div class="mb-3">
+                <label for="spoed" class="form-label">Spoed</label>
+                <select id="spoed" name="spoed" class="form-select" required>
+                    <option value="0">Normaal</option>
+                    <option value="1">Spoed</option>
+                </select>
+            </div>
+
+            <!-- Producten Sectie -->
+            <h2 class="my-4">Producten in Bestelling</h2>
+            <div class="row g-3">
+                {% if products %}
+                    {% for product in products %}
+                        <div class="col-md-4">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title text-center">{{ product.naam }}</h5>
+                                    <div class="mb-3">
+                                        <label class="form-label">Aantal</label>
+                                        <input type="number" class="form-control" name="product_aantal_{{ product.productnr }}" value="0">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Prijs</label>
+                                        <input type="number" class="form-control" name="product_prijs_{{ product.productnr }}" value="0">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p>Geen producten beschikbaar.</p>
+                {% endif %}
+            </div>
+
+            <!-- Submit Button -->
+            <div class="text-center my-4">
+                <button type="submit" class="btn btn-primary btn-lg">Bestelling Aanmaken</button>
+            </div>
+        </form>
+
+        {% if referrer %}
+            <div class="text-center mt-3">
+                <a href="{{ referrer }}" class="btn btn-secondary">Terug</a>
+            </div>
+        {% endif %}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

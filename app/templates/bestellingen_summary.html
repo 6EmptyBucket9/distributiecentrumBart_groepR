@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="nl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geplaatste Bestellingen</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-light">
+    <div class="container py-5">
+        <h1 class="text-center mb-5">Geplaatste Bestellingen</h1>
+
+        <div class="row g-4">
+            <!-- Status filter Form -->
+            <div class="col-md-6">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Zoek op Status</h5>
+                        <form method="POST" action="{{ url_for('main.show_orders') }}">
+                            <div class="mb-3">
+                                <label for="status" class="form-label">Status:</label>
+                                <select name="status" id="status" class="form-select">
+                                    <option value="">Alle</option>
+                                    {% for status in statuses %}
+                                    <option value="{{ status.idBestelling_status }}" {% if selected_status == status.idBestelling_status|string %}selected{% endif %}>{{ status.status }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">Zoek</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Zoek op Bestellingsnummer Form -->
+            <div class="col-md-6">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Zoek op Bestellingsnummer</h5>
+                        <form method="POST" action="{{ url_for('main.show_orders') }}">
+                            <div class="mb-3">
+                                <label for="bestellingsnr" class="form-label">Bestellingsnummer:</label>
+                                <input type="text" name="bestellingsnr" id="bestellingsnr" class="form-control" placeholder="Bijv. 12345">
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">Zoek</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bestellingen Tabel -->
+        <div class="mt-5">
+            {% if bestellingen %}
+            <div class="table-responsive shadow-sm">
+                <table class="table table-hover table-bordered align-middle">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Bestellingsnr</th>
+                            <th>Medewerker</th>
+                            <th>Datum</th>
+                            <th>Status</th>
+                            <th>Levermoment</th>
+                            <th>Dagdeel</th>
+                            <th>Koerier</th>
+                            <th>KM Transport</th>
+                            <th>Spoed</th>
+                            <th>Details</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for bestelling in bestellingen %}
+                        <tr>
+                            <td>{{ bestelling.bestellingsnr }}</td>
+                            <td>{{ bestelling.medewerker_rel.voornaam }} {% if bestelling.medewerker_rel.tussenvoegsel %}{{ bestelling.medewerker_rel.tussenvoegsel }} {% endif %}{{ bestelling.medewerker_rel.achternaam }}</td>
+                            <td>{{ bestelling.datum.strftime('%d-%m-%Y') }}</td>
+                            <td>{{ bestelling.status_rel.status }}</td>
+                            <td>{{ bestelling.levermoment_rel.moment }}</td>
+                            <td>{{ bestelling.dagdeel_rel.dagdeel }}</td>
+                            <td>{{ bestelling.koerier_rel.naam }}</td>
+                            <td>{{ bestelling.km_transport }}</td>
+                            <td>
+                                {% if bestelling.spoed %}
+                                <span class="badge bg-danger">Spoed</span>
+                                {% else %}
+                                <span class="badge bg-success">Normaal</span>
+                                {% endif %}
+                            </td>
+                            <td><a href="{{ url_for('main.show_order_detail', bestelling_id=bestelling.bestellingsnr) }}" class="btn btn-sm btn-outline-primary">Bekijk</a></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="alert alert-warning text-center mt-4" role="alert">
+                Geen bestellingen gevonden.
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Terug Knop -->
+        {% if referrer %}
+        <div class="text-center my-4">
+            <a href="{{ referrer }}" class="btn btn-secondary">Terug</a>
+        </div>
+        {% endif %}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

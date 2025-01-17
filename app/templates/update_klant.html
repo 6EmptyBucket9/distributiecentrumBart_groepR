@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="nl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Klant Bewerken</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-light">
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Klant Bewerken</h1>
+        <form action="{{ url_for('main.update_customer', klantnr=klant.klantnr) }}" method="POST">
+            <div class="mb-3">
+                <label for="voornaam" class="form-label">Voornaam</label>
+                <input type="text" class="form-control" id="voornaam" name="voornaam" value="{{ klant.voornaam }}" required>
+            </div>
+            <div class="mb-3">
+                <label for="tussenvoegsel" class="form-label">Tussenvoegsel</label>
+                <input type="text" class="form-control" id="tussenvoegsel" name="tussenvoegsel" 
+                    {% if klant and klant.tussenvoegsel %} value="{{ klant.tussenvoegsel }}" {% endif %}>
+            </div>
+            <div class="mb-3">
+                <label for="achternaam" class="form-label">Achternaam</label>
+                <input type="text" class="form-control" id="achternaam" name="achternaam" value="{{ klant.achternaam }}" required>
+            </div>
+            <div class="mb-3">
+                <label for="telefoonnr" class="form-label">Telefoonnummer</label>
+                <input type="tel" class="form-control" id="telefoonnr" name="telefoonnr" value="{{ klant.telefoonnr }}" required>
+            </div>
+            <div class="d-flex justify-content-between">
+                <button type="submit" class="btn btn-primary">Bijwerken</button>
+                <a href="{{ url_for('main.show_customers') }}" class="btn btn-secondary">Annuleren</a>
+            </div>
+        </form>
+        {% if referrer %}
+        <div class="mb-3 mt-3">
+            <a href="{{ referrer }}" class="btn btn-secondary">Terug</a>
+        </div>
+        {% endif %}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+</body>
+
+</html>

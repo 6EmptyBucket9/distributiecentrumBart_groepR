@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="nl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bestelling Details</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-light">
+    <div class="container py-5">
+        <h1 class="text-center mb-4">Bestelling Details</h1>
+
+        {% if bestelling %}
+        <form method="POST" action="{{ url_for('main.show_order_detail', bestelling_id=bestelling.bestellingsnr) }}">
+            <input type="hidden" name="_method" value="PUT">
+
+            <!-- Bestelling Table -->
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Bestellingsnr</th>
+                            <th>Datum</th>
+                            <th>Status</th>
+                            <th>Spoed</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{{ bestelling.bestellingsnr }}</td>
+                            <td>{{ bestelling.datum.strftime('%d-%m-%Y') }}</td>
+                            <td>
+                                <select name="status" id="status" class="form-select">
+                                    <option value="">All</option>
+                                    {% for status in statuses %}
+                                    <option value="{{ status.idBestelling_status }}" {% if bestelling.status == status.idBestelling_status %}selected{% endif %}>{{ status.status }}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            <td>{{ bestelling.spoed }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Products Section -->
+            <h2 class="my-4">Producten in Bestelling</h2>
+            <div class="row">
+                {% for product_in_bestelling in bestelling.products_in_bestelling %}
+                <div class="col-md-4 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ product_in_bestelling.product_rel.productnr }} - {{ product_in_bestelling.product_rel.naam }}</h5>
+                            <p class="card-text">Voorraad: {{ product_in_bestelling.product_rel.voorraad }}</p>
+                            <p class="card-text">Bederfelijkheidsfactor: {{ product_in_bestelling.product_rel.bederfelijkheidsfactor }}</p>
+                            <p class="card-text">Batchnummer: {{ product_in_bestelling.product_rel.batchnummer }}</p>
+                            <p class="card-text">Verpakkingsgrote: {{ product_in_bestelling.product_rel.verpakkingsgrote }}</p>
+                            <p class="card-text">Locatie: {{ product_in_bestelling.product_rel.locatie_rel.locatie_naam if product_in_bestelling.product_rel.locatie_rel else 'N/A' }}</p>
+                            <p class="card-text">Bewaaradvies: {{ product_in_bestelling.product_rel.bewaaradvies_rel.advies if product_in_bestelling.product_rel.bewaaradvies_rel else 'N/A' }}</p>
+                            <p class="card-text">Fabrikant: {{ product_in_bestelling.product_rel.fabrikant_rel.naam if product_in_bestelling.product_rel.fabrikant_rel else 'N/A' }}</p>
+
+                            <!-- Form Fields for Updating -->
+                            <div class="mb-3">
+                                <label for="verschil_in_voorraad_{{ loop.index }}" class="form-label">Verschil in Voorraad</label>
+                                <input type="text" class="form-control" id="verschil_in_voorraad_{{ loop.index }}" name="products[{{ loop.index0 }}][verschil_in_voorraad]" value="{{ product_in_bestelling.verschil_in_voorraad }}">
+                            </div>
+                            <div class="mb-3">
+                                <label for="aantal_{{ loop.index }}" class="form-label">Aantal</label>
+                                <input type="number" class="form-control" id="aantal_{{ loop.index }}" name="products[{{ loop.index0 }}][aantal]" value="{{ product_in_bestelling.aantal }}">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                <p>Bestelling heeft geen producten.</p>
+                {% endfor %}
+            </div>
+
+            <div class="text-center my-4">
+                <button type="submit" class="btn btn-primary btn-lg">Wijzig</button>
+            </div>
+        </form>
+        {% else %}
+        <p class="text-center">Geen bestellingen gevonden.</p>
+        {% endif %}
+
+        {% if referrer %}
+        <div class="text-center my-3">
+            <a href="{{ referrer }}" class="btn btn-secondary btn-lg">Terug</a>
+        </div>
+        {% endif %}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="nl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fabrikanten Overzicht</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+
+<body class="bg-light">
+    <div class="container py-5">
+        <!-- Header -->
+        <div class="text-center mb-5">
+            <h1 class="display-5 fw-bold">Overzicht van Fabrikanten</h1>
+        </div>
+
+        <!-- Action Button -->
+        <div class="d-flex justify-content-end mb-4">
+            <a href="{{ url_for('main.add_supplier') }}" class="btn btn-success">
+                <i class="bi bi-plus-circle me-2"></i> Nieuwe Fabrikant Toevoegen
+            </a>
+        </div>
+
+        <!-- Fabrikanten Table -->
+        <div class="table-responsive shadow-sm">
+            <table class="table table-bordered table-hover align-middle">
+                <thead class="table-dark text-center">
+                    <tr>
+                        <th>Naam</th>
+                        <th>Emailadres</th>
+                        <th>Telefoonnummer</th>
+                        <th>Acties</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for fabrikant in fabrikanten %}
+                    <tr>
+                        <td>{{ fabrikant.naam }}</td>
+                        <td>{{ fabrikant.emailadres }}</td>
+                        <td>{{ fabrikant.telefoonnr }}</td>
+                        <td class="text-center">
+                            <a href="{{ url_for('main.update_supplier', idFabrikant=fabrikant.idFabrikant) }}"
+                                class="btn btn-warning btn-sm me-2">
+                                <i class="bi bi-pencil-square"></i> Bewerken
+                            </a>
+                            <a href="{{ url_for('main.delete_supplier', idFabrikant=fabrikant.idFabrikant) }}"
+                                class="btn btn-danger btn-sm" onclick="return confirm('Weet je zeker dat je deze fabrikant wilt verwijderen?');">
+                                <i class="bi bi-trash"></i> Verwijderen
+                            </a>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="4" class="text-center text-muted">Geen fabrikanten gevonden.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Terug Knop -->
+        {% if referrer %}
+        <div class="mt-4">
+            <a href="{{ referrer }}" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Terug
+            </a>
+        </div>
+        {% endif %}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
