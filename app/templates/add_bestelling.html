@@ -6,98 +6,127 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nieuwe Bestelling</title>
     <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            max-width: 600px;
+        }
+
+        .btn-custom {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .btn-custom:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 
 <body>
-    <h1 class="text-center my-5">Nieuwe Bestelling</h1>
-    <form method="POST" action="{{ url_for('main.add_bestelling') }}">
-        <!-- Bestelling Section -->
-        <h2 class="my-4">Bestelling Informatie</h2>
+    <div class="container my-5">
+        <h1 class="text-center mb-4">Nieuwe Bestelling</h1>
 
-        <!-- Medewerker -->
-        <div class="mb-3">
-            <label for="bestelling_medewerker" class="form-label">Medewerker</label>
-            <select id="bestelling_medewerker" name="bestelling_medewerker" class="form-select" required>
-                {% for medewerker in medewerkers %}
+        <form method="POST" action="{{ url_for('main.add_order') }}" class="shadow-sm p-4 rounded bg-white">
+            <h2 class="my-4">Bestelling Informatie</h2>
+
+            <!-- Medewerker Dropdown -->
+            <div class="mb-3">
+                <label for="bestelling_medewerker" class="form-label">Medewerker</label>
+                <select id="bestelling_medewerker" name="bestelling_medewerker" class="form-select" required>
+                    {% for medewerker in related_models['medewerkers'] %}
                     <option value="{{ medewerker.Medewerkernr }}">
-                        {{ medewerker.voornaam }} {{ medewerker.tussenvoegsel }} {{ medewerker.achternaam }}
+                        {{ medewerker.voornaam }} {{ medewerker.tussenvoegsel or '' }} {{ medewerker.achternaam }}
                     </option>
-                {% endfor %}
-            </select>
-        </div>
+                    {% else %}
+                    <option disabled>No medewerkers available</option>
+                    {% endfor %}
+                </select>
+            </div>
 
-        <!-- Datum -->
-        <div class="mb-3">
-            <label for="datum" class="form-label">Datum</label>
-            <input type="date" class="form-control" id="datum" name="datum" required>
-        </div>
+            <!-- Datum -->
+            <div class="mb-3">
+                <label for="datum" class="form-label">Datum</label>
+                <input type="date" class="form-control" id="datum" name="datum" required>
+            </div>
 
-        <!-- Bestelling Status -->
-        <div class="mb-3">
-            <label for="status" class="form-label">Bestelling Status</label>
-            <select name="status" id="status" class="form-select">
-                <option value="">All</option>
-                {% for status in statuses %}
+            <!-- Status Dropdown -->
+            <div class="mb-3">
+                <label for="status" class="form-label">Bestelling Status</label>
+                <select name="status" id="status" class="form-select">
+                    <option value="">All</option>
+                    {% for status in related_models['statuses'] %}
                     <option value="{{ status.idBestelling_status }}">{{ status.status }}</option>
-                {% endfor %}
-            </select>
-        </div>
+                    {% else %}
+                    <option disabled>No statuses available</option>
+                    {% endfor %}
+                </select>
+            </div>
 
-        <!-- Levermoment -->
-        <div class="mb-3">
-            <label for="bestelling_levermoment" class="form-label">Levermoment</label>
-            <select id="bestelling_levermoment" name="bestelling_levermoment" class="form-select" required>
-                {% for levermoment in levermomenten %}
+            <!-- Levermoment Dropdown -->
+            <div class="mb-3">
+                <label for="bestelling_levermoment" class="form-label">Levermoment</label>
+                <select id="bestelling_levermoment" name="bestelling_levermoment" class="form-select" required>
+                    {% for levermoment in related_models['levermomenten'] %}
                     <option value="{{ levermoment.idLevermoment }}">
                         {{ levermoment.moment }}
                     </option>
-                {% endfor %}
-            </select>
-        </div>
+                    {% else %}
+                    <option disabled>No levermomenten available</option>
+                    {% endfor %}
+                </select>
+            </div>
 
-        <!-- Dagdeel -->
-        <div class="mb-3">
-            <label for="bestelling_dagdeel" class="form-label">Dagdeel</label>
-            <select id="bestelling_dagdeel" name="bestelling_dagdeel" class="form-select" required>
-                {% for dagdeel in dagdelen %}
+            <!-- Dagdeel Dropdown -->
+            <div class="mb-3">
+                <label for="bestelling_dagdeel" class="form-label">Dagdeel</label>
+                <select id="bestelling_dagdeel" name="bestelling_dagdeel" class="form-select" required>
+                    {% for dagdeel in related_models['dagdelen'] %}
                     <option value="{{ dagdeel.idDagdeel }}">
                         {{ dagdeel.dagdeel }}
                     </option>
-                {% endfor %}
-            </select>
-        </div>
+                    {% else %}
+                    <option disabled>No dagdelen available</option>
+                    {% endfor %}
+                </select>
+            </div>
 
-        <!-- Koerier -->
-        <div class="mb-3">
-            <label for="bestelling_koerier" class="form-label">Koerier</label>
-            <select id="bestelling_koerier" name="bestelling_koerier" class="form-select" required>
-                {% for koerier in koeriers %}
+            <!-- Koerier Dropdown -->
+            <div class="mb-3">
+                <label for="bestelling_koerier" class="form-label">Koerier</label>
+                <select id="bestelling_koerier" name="bestelling_koerier" class="form-select" required>
+                    {% for koerier in related_models['koeriers'] %}
                     <option value="{{ koerier.idKoerier }}">
                         {{ koerier.naam }}
                     </option>
-                {% endfor %}
-            </select>
-        </div>
+                    {% else %}
+                    <option disabled>No koeriers available</option>
+                    {% endfor %}
+                </select>
+            </div>
 
-        <!-- KM Transport -->
-        <div class="mb-3">
-            <label for="km_transport" class="form-label">Kilometers voor transport</label>
-            <input type="number" class="form-control" id="km_transport" name="km_transport" required>
-        </div>
+            <!-- Kilometers for Transport -->
+            <div class="mb-3">
+                <label for="km_transport" class="form-label">Kilometers voor transport</label>
+                <input type="number" class="form-control" id="km_transport" name="km_transport" required>
+            </div>
 
-        <!-- Spoed -->
-        <div class="mb-3">
-            <label for="spoed" class="form-label">Spoed</label>
-            <select id="spoed" name="spoed" class="form-select" required>
-                <option value="0">Normaal</option>
-                <option value="1">Spoed</option>
-            </select>
-        </div>
+            <!-- Spoed Dropdown -->
+            <div class="mb-3">
+                <label for="spoed" class="form-label">Spoed</label>
+                <select id="spoed" name="spoed" class="form-select" required>
+                    <option value="0">Normaal</option>
+                    <option value="1">Spoed</option>
+                </select>
+            </div>
 
-        <!-- Products Section -->
-        <h2 class="my-4">Products in Bestelling</h2>
-        <div class="row">
-            {% for product in products %}
+            <!-- Products Section -->
+            <h2 class="my-4">Products in Bestelling</h2>
+            <div class="row">
+                {% for product in products %}
                 <div class="col-md-4 mb-3">
                     <div class="card">
                         <div class="card-body">
@@ -106,26 +135,35 @@
                             <!-- Product in bestelling fields-->
                             <div class="mb-3">
                                 <label class="form-label">Aantal</label>
-                                <input type="number" class="form-control" name="product_aantal_{{ product.productnr }}" value="0">
+                                <input type="number" class="form-control" name="product_aantal_{{ product.productnr }}"
+                                    value="0">
                             </div>
                             <div class="mb-3">
                                 <label for="prijs" class="form-label">Prijs</label>
-                                <input type="number" class="form-control" name="product_prijs_{{ product.productnr }}" value="0">
+                                <input type="number" class="form-control" name="product_prijs_{{ product.productnr }}"
+                                    value="0">
                             </div>
                         </div>
                     </div>
                 </div>
-            {% else %}
+                {% else %}
                 <p>Geen producten beschikbaar.</p>
-            {% endfor %}
-        </div>
+                {% endfor %}
+            </div>
 
-        <div class="text-center my-4">
-            <button type="submit" class="btn btn-primary">Bestelling Aanmaken</button>
+            <div class="text-center my-4">
+                <button type="submit" class="btn btn-primary">Bestelling Aanmaken</button>
+            </div>
+        </form>
+        {% if referrer %}
+        <div class="mb-3">
+            <a href="{{ referrer }}" class="btn btn-secondary">Terug</a>
         </div>
-    </form>
+        {% endif %}
 
-    <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

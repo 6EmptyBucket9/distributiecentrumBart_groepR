@@ -69,10 +69,6 @@ class BestellingController:
         db.session.add(new_bestelling)
         db.session.commit()
 
-        # Use the ProductInBestellingController to add products
-        products_data = form_data.get('products_data', {})
-        ProductInBestellingController.add_product_in_bestelling(new_bestelling, products_data)
-
         return new_bestelling
 
     @staticmethod

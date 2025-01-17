@@ -129,6 +129,12 @@
         {% else %}
         <p class="text-center mt-4">Zoek een bestelling op.</p>
         {% endif %}
+        {% if referrer %}
+        <div class="mb-3">
+            <a href="{{ referrer }}" class="btn btn-secondary">Terug</a>
+        </div>
+        {% endif %}
+
     </div>
 
     <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>

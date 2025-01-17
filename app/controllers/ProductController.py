@@ -3,12 +3,15 @@ from app.models.Product import Product
 from app.models.Locatie import Locatie
 from app.models.Fabrikant import Fabrikant
 from app.models.BewaarAdvies import BewaarAdvies
-
+from sqlalchemy import and_
 class ProductController:
 
     @staticmethod
     def create_product(form_data):
         """Create a new product from form data."""
+
+        if any(char.isdigit() for char in form_data['naam']):
+            return "Numbers in name is not allowed"
         new_product = Product(
             naam=form_data['naam'],
             bederfelijkheidsfactor=form_data['bederfelijkheidsfactor'],
@@ -57,3 +60,23 @@ class ProductController:
             db.session.delete(product_to_delete)
             db.session.commit()
         return product_to_delete
+    
+    @staticmethod
+    def duplicate_product_entry(new_product):
+        existing_product = (
+            Product.query.filter(
+                and_(
+                    Product.naam == new_product.naam,
+                    Product.bederfelijkheidsfactor == new_product.bederfelijkheidsfactor,
+                    Product.batchnummer == new_product.batchnummer,
+                    Product.verpakkingsgrote == new_product.verpakkingsgrote,
+                    Product.voorraad == new_product.voorraad,
+                    Product.verschil_in_voorraad == new_product.verschil_in_voorraad,
+                    Product.locatie_id == new_product.locatie_id,
+                    Product.bewaaradvies == new_product.bewaaradvies,
+                    Product.product_fabrikant == new_product.product_fabrikant,
+                )
+            )
+            .first()
+        )
+        return existing_product is not None

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="nl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fabrikanten Overzicht</title>
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container py-5">
+        <!-- Header -->
+        <div class="text-center mb-4">
+            <h1 class="display-5 fw-bold">Overzicht van Fabrikanten</h1>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="d-flex justify-content-center mb-4">
+            <a href="{{ url_for('main.add_supplier') }}" class="btn btn-primary me-2">
+                <i class="bi bi-plus-circle"></i> Nieuwe Fabrikant Toevoegen
+            </a>
+        </div>
+
+        <!-- Fabrikanten Table -->
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Naam</th>
+                        <th>Emailadres</th>
+                        <th>Telefoonnummer</th>
+                        <th class="text-center">Acties</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for fabrikant in fabrikanten %}
+                    <tr>
+                        <td>{{ fabrikant.naam }}</td>
+                        <td>{{ fabrikant.emailadres }}</td>
+                        <td>{{ fabrikant.telefoonnr }}</td>
+                        <td class="text-center">
+                            <div class="btn-group">
+                                <!-- Correct URL for update -->
+                                <a href="{{ url_for('main.update_supplier', idFabrikant=fabrikant.idFabrikant) }}"
+                                    class="btn btn-warning btn-sm">
+                                    <i class="bi bi-pencil"></i> Bewerken
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="4" class="text-center">Geen fabrikanten gevonden.</td>
+                    </tr>
+                    {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+        {% if referrer %}
+        <div class="mb-3">
+            <a href="{{ referrer }}" class="btn btn-secondary">Terug</a>
+        </div>
+        {% endif %}
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

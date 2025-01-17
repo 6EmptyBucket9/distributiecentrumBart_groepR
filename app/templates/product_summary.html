@@ -23,8 +23,8 @@
                     <p><strong>Bederfelijkheidsfactor:</strong> {{ product.bederfelijkheidsfactor }}</p>
                     <p><strong>Batchnummer:</strong> {{ product.batchnummer }}</p>
                     <p><strong>Verpakkingsgrote:</strong> {{ product.verpakkingsgrote }}</p>
-                    <p><strong>Locatie:</strong> {{ product.locatie_rel.locatie_naam  }}</p>
-                    <p><strong>Fabrikant:</strong> {{ product.fabrikant_rel.naam  }}</p>
+                    <p><strong>Locatie:</strong> {{ product.locatie_rel.locatie_naam }}</p>
+                    <p><strong>Fabrikant:</strong> {{ product.fabrikant_rel.naam }}</p>
                     <p><strong>Bewaaradvies:</strong> {{ product.bewaaradvies_rel.advies}}</p>
                     <a href="{{ url_for('main.update_product', productnr=product.productnr) }}">Update product</a>
                 </div>
@@ -35,6 +35,11 @@
 
     {% else %}
     <p>Geen producten gevonden.</p>
+    {% endif %}
+    {% if referrer %}
+    <div class="mb-3">
+        <a href="{{ referrer }}" class="btn btn-secondary">Terug</a>
+    </div>
     {% endif %}
 
     <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="nl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Klant Bewerken</title>
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            max-width: 600px;
+        }
+
+        .btn-custom {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .btn-custom:hover {
+            background-color: #0056b3;
+        }
+
+        .btn-secondary-custom {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary-custom:hover {
+            background-color: #5a6268;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container mt-5">
+        <h1>Klant Bewerken</h1>
+        <form action="{{ url_for('main.update_customer', klantnr=klant.klantnr) }}" method="POST">
+            <div class="mb-3">
+                <label for="voornaam" class="form-label">Voornaam</label>
+                <input type="text" class="form-control" id="voornaam" name="voornaam" value="{{ klant.voornaam }}"
+                    required>
+            </div>
+            <div class="mb-3">
+                <label for="tussenvoegsel" class="form-label">Tussenvoegsel</label>
+                <input type="text" class="form-control" id="tussenvoegsel" name="tussenvoegsel" {% if klant and
+                    klant.tussenvoegsel %} value="{{ klant.tussenvoegsel }}" {% endif %}>
+            </div>
+
+            <div class="mb-3">
+                <label for="achternaam" class="form-label">Achternaam</label>
+                <input type="text" class="form-control" id="achternaam" name="achternaam" value="{{ klant.achternaam }}"
+                    required>
+            </div>
+            <div class="mb-3">
+                <label for="telefoonnr" class="form-label">Telefoonnummer</label>
+                <input type="tel" class="form-control" id="telefoonnr" name="telefoonnr" value="{{ klant.telefoonnr }}"
+                    required>
+            </div>
+            <button type="submit" class="btn btn-primary">Bijwerken</button>
+            <a href="{{ url_for('main.show_customers') }}" class="btn btn-secondary-custom">Annuleren</a>
+        </form>
+        {% if referrer %}
+        <div class="mb-3">
+            <a href="{{ referrer }}" class="btn btn-secondary">Terug</a>
+        </div>
+        {% endif %}
+
+    </div>
+</body>
+
+</html>

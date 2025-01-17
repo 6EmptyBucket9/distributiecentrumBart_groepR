@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="nl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nieuwe Klant Toevoegen</title>
+    <!-- Bootstrap CSS -->
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            max-width: 600px;
+        }
+
+        .btn-custom {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .btn-custom:hover {
+            background-color: #0056b3;
+        }
+
+        .form-container {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            background-color: white;
+            border-radius: 8px;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container my-5">
+        <h2>Nieuwe Klant Toevoegen</h2>
+
+        <form action="{{ url_for('main.add_customer') }}" method="POST" class="form-container">
+            <div class="mb-3">
+                <label for="voornaam" class="form-label">Voornaam</label>
+                <input type="text" class="form-control" id="voornaam" name="voornaam" required>
+            </div>
+            <div class="mb-3">
+                <label for="tussenvoegsel" class="form-label">Tussenvoegsel</label>
+                <input type="text" class="form-control" id="tussenvoegsel" name="tussenvoegsel">
+            </div>
+            <div class="mb-3">
+                <label for="achternaam" class="form-label">Achternaam</label>
+                <input type="text" class="form-control" id="achternaam" name="achternaam" required>
+            </div>
+            <div class="mb-3">
+                <label for="telefoonnr" class="form-label">Telefoonnummer</label>
+                <input type="tel" class="form-control" id="telefoonnr" name="telefoonnr" required>
+            </div>
+            <div class="text-center my-4">
+                <button type="submit" class="btn btn-custom">Toevoegen</button>
+            </div>
+        </form>
+        {% if referrer %}
+        <div class="mb-3">
+            <a href="{{ referrer }}" class="btn btn-secondary">Terug</a>
+        </div>
+        {% endif %}
+    </div>
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-pzjw8f+ua7Kw1TIq0YNhF1k3eGpH7bggk8jC1tuFwHFlGo/7p3HhQy8gPf2F9vZC"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
