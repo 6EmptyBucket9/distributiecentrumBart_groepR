@@ -6,28 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Track & Trace Bestelling</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            background-color: #f8f9fa;
-        }
-
-        .container {
-            max-width: 1200px;
-        }
-
-        .card-body {
-            background-color: #ffffff;
-        }
-
-        .btn-custom {
-            background-color: #007bff;
-            color: white;
-        }
-
-        .btn-custom:hover {
-            background-color: #0056b3;
-        }
-    </style>
 </head>
 
 <body>
@@ -113,15 +91,17 @@
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">{{ product_in_bestelling.product_rel.productnr }} - {{ product_in_bestelling.product_rel.naam }}</h5>
-                            <p class="card-text"><strong>Voorraad:</strong> {{ product_in_bestelling.product_rel.voorraad }}</p>
-                            <p class="card-text"><strong>Bederfelijkheidsfactor:</strong> {{ product_in_bestelling.product_rel.bederfelijkheidsfactor }}</p>
-                            <p class="card-text"><strong>Batchnummer:</strong> {{ product_in_bestelling.product_rel.batchnummer }}</p>
-                            <p class="card-text"><strong>Verpakkingsgrote:</strong> {{ product_in_bestelling.product_rel.verpakkingsgrote }}</p>
-                            <p class="card-text"><strong>Locatie:</strong> {{ product_in_bestelling.product_rel.locatie_rel.locatie_naam if product_in_bestelling.product_rel.locatie_rel else 'N/A' }}</p>
-                            <p class="card-text"><strong>Bewaaradvies:</strong> {{ product_in_bestelling.product_rel.bewaaradvies_rel.advies if product_in_bestelling.product_rel.bewaaradvies_rel else 'N/A' }}</p>
-                            <p class="card-text"><strong>Fabrikant:</strong> {{ product_in_bestelling.product_rel.fabrikant_rel.naam if product_in_bestelling.product_rel.fabrikant_rel else 'N/A' }}</p>
-                            <p class="card-text"><strong>Verschil in Voorraad:</strong> {{ product_in_bestelling.verschil_in_voorraad }}</p>
-                            <p class="card-text"><strong>Aantal:</strong> {{ product_in_bestelling.aantal }}</p>
+                            <ul class="list-unstyled">
+                                <li><strong>Voorraad:</strong> {{ product_in_bestelling.product_rel.voorraad }}</li>
+                                <li><strong>Bederfelijkheidsfactor:</strong> {{ product_in_bestelling.product_rel.bederfelijkheidsfactor }}</li>
+                                <li><strong>Batchnummer:</strong> {{ product_in_bestelling.product_rel.batchnummer }}</li>
+                                <li><strong>Verpakkingsgrote:</strong> {{ product_in_bestelling.product_rel.verpakkingsgrote }}</li>
+                                <li><strong>Locatie:</strong> {{ product_in_bestelling.product_rel.locatie_rel.locatie_naam if product_in_bestelling.product_rel.locatie_rel else 'N/A' }}</li>
+                                <li><strong>Bewaaradvies:</strong> {{ product_in_bestelling.product_rel.bewaaradvies_rel.advies if product_in_bestelling.product_rel.bewaaradvies_rel else 'N/A' }}</li>
+                                <li><strong>Fabrikant:</strong> {{ product_in_bestelling.product_rel.fabrikant_rel.naam if product_in_bestelling.product_rel.fabrikant_rel else 'N/A' }}</li>
+                                <li><strong>Verschil in Voorraad:</strong> {{ product_in_bestelling.verschil_in_voorraad }}</li>
+                                <li><strong>Aantal:</strong> {{ product_in_bestelling.aantal }}</li>
+                            </ul>
                         </div>
                     </div>
                 </div>
@@ -131,7 +111,7 @@
             </div>
 
             <div class="text-center mt-4">
-                <button type="submit" class="btn btn-custom">Opslaan</button>
+                <button type="submit" class="btn btn-primary">Opslaan</button>
             </div>
         </form>
 
