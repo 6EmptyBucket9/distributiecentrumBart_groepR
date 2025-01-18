@@ -7,6 +7,7 @@ from app.controllers.ProductInBestellingController import ProductInBestellingCon
 from app.models import db 
 from app.models.BestellingStatus import BestellingStatus
 from app.models.Product import Product
+from app.controllers.FactuurController import FactuurController
 from app.models.Fabrikant import Fabrikant
 from app.models.Locatie import Locatie
 from app.models.BewaarAdvies import BewaarAdvies
@@ -416,3 +417,14 @@ def update_customer(klantnr):
         return redirect(url_for('main.show_customers', klantnr=klantnr,referrer=referrer)) 
 
     return render_template("update_klant.html", klant=klant)
+@main.route('/factuur/<int:factuurnr>')
+def show_factuur(factuurnr):
+    factuur = FactuurController.get_factuur_by_nr(factuurnr)
+    
+    if not factuur:
+        return "Factuur not found", 404
+
+    # Calculate and update the factuur total and discount
+    FactuurController.update_factuur(factuurnr)
+
+    return render_template('factuur.html', factuur=factuur)

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice - Factuur #{{ factuur.factuurnr }}</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="mb-4">Factuur: #{{ factuur.factuurnr }}</h1>
+        <p><strong>Customer:</strong> {{ klant.voornaam }} {{ klant.tussenvoegsel }} {{ klant.achternaam }}</p>
+        <p><strong>Date of Issue:</strong> {{ factuur.datum_uitgifte }}</p>
+        <p><strong>Due Date:</strong> {{ factuur.verval_datum }}</p>
+
+        <h3 class="mt-4">Order Details</h3>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Order Date</th>
+                    <th>Order Amount (€)</th>
+                    <th>Order Discount (€)</th>
+                    <th>Final Amount (€)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ bestelling.bestellingsnr }}</td>
+                    <td>{{ bestelling.datum }}</td>
+                    <td>€{{ bestelling.km_transport }}</td>
+                    <td>€{{ bestelling.km_transport * 0.05 if bestelling.km_transport >= 500 else 0 }}</td>
+                    <td>€{{ factuur.totaal_bedrag }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3 class="mt-4">Discounts</h3>
+        <ul>
+            <li>Order Discount: €{{ bestelling.km_transport * 0.05 if bestelling.km_transport >= 500 else 0 }}</li>
+            <li>Customer Discount (based on yearly revenue): {{ factuur.klantkorting * 100 }}%</li>
+        </ul>
+
+        <h3 class="mt-4">Total Amount After Discount: €{{ factuur.totaal_bedrag }}</h3>
+        <a href="{{ url_for('show_factuur', factuurnr=factuur.factuurnr) }}" class="btn btn-primary mt-3">Back to Invoice</a>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
