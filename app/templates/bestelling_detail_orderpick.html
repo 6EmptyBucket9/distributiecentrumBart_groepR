@@ -14,31 +14,33 @@
             <input type="hidden" name="_method" value="PUT">
 
             <!-- Bestelling Table -->
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>Bestellingsnr</th>
-                        <th>Datum</th>
-                        <th>Status</th>
-                        <th>Spoed</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>{{ bestelling.bestellingsnr }}</td>
-                        <td>{{ bestelling.datum.strftime('%d-%m-%Y')  }}</td>
-                        <td>
-                            <select name="status" id="status" class="form-select">
-                                <option value="">All</option>
-                                {% for status in statuses %}
-                                    <option value="{{ status.idBestelling_status }}" {% if bestelling.status == status.idBestelling_status %}selected{% endif %}>{{ status.status }}</option>
-                                {% endfor %}
-                            </select>
-                        </td>
-                        <td>{{ bestelling.spoed }}</td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Bestellingsnr</th>
+                            <th>Datum</th>
+                            <th>Status</th>
+                            <th>Spoed</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{{ bestelling.bestellingsnr }}</td>
+                            <td>{{ bestelling.datum.strftime('%d-%m-%Y')  }}</td>
+                            <td>
+                                <select name="status" id="status" class="form-select">
+                                    <option value="">All</option>
+                                    {% for status in statuses %}
+                                        <option value="{{ status.idBestelling_status }}" {% if bestelling.status == status.idBestelling_status %}selected{% endif %}>{{ status.status }}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            <td>{{ bestelling.spoed }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
 
             <!-- Products Section -->
             <h2 class="my-4">Products in Bestelling</h2>
@@ -80,11 +82,12 @@
     {% else %}
         <p>Geen bestellingen gevonden.</p>
     {% endif %}
+    
     {% if referrer %}
-    <div class="mb-3">
-        <a href="{{ referrer }}" class="btn btn-secondary">Terug</a>
-    </div>
-{% endif %}
+        <div class="mb-3">
+            <a href="{{ referrer }}" class="btn btn-secondary">Terug</a>
+        </div>
+    {% endif %}
 
     <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
 </body>

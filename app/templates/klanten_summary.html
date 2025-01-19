@@ -54,8 +54,14 @@
                                     class="btn btn-warning btn-sm">
                                     <i class="bi bi-pencil"></i> Bewerken
                                 </a>
+                                <a href="{{ url_for('main.show_factuur', klantnr=klant.klantnr) }}"
+                                class="btn btn-warning btn-sm">
+                                <i class="bi bi-pencil"></i> Bekijk factuur
+                            </a>
                             </div>
+                            
                         </td>
+                        
                     </tr>
                     {% else %}
                     <tr>

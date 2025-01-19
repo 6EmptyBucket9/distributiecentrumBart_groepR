@@ -21,6 +21,7 @@ from app.controllers.LevermomentController import LevermomentController
 from app.controllers.KoerierController import KoerierController
 from app.controllers.MedewerkersController import MedewerkerController
 from app.controllers.KlantController import KlantController
+from app.controllers.FactuurController import FactuurController
 main = Blueprint('main', __name__)
 
 # Bestelling summary page
@@ -416,3 +417,14 @@ def update_customer(klantnr):
         return redirect(url_for('main.show_customers', klantnr=klantnr,referrer=referrer)) 
 
     return render_template("update_klant.html", klant=klant)
+# Factuur page
+@main.route('/factuur/<int:klantnr>')
+def show_factuur(klantnr):
+    factuur = FactuurController.get_factuur_by_klantnr(klantnr)
+    if not factuur:
+        return "Factuur not found", 404
+
+    # Calculate and update the factuur total and discount
+    FactuurController.update_factuur(factuur.factuurnr)
+
+    return render_template('factuur.html', factuur=factuur)
